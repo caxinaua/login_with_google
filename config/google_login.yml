@@ -1,0 +1,49 @@
+default: &default
+  app:
+    client_id: <%= ENV['G_CLIENT_ID'] %>
+    client_secret: <%= ENV['G_CLIENT_SECRET'] %>
+
+  auth:
+    grant_type: "authorization_code"
+    client_id: <%= ENV['G_CLIENT_ID'] %>
+    client_secret: <%= ENV['G_CLIENT_SECRET'] %>
+
+  refresh:
+    grant_type: "refresh_token"
+    client_id: <%= ENV['G_CLIENT_ID'] %>
+    client_secret: <%= ENV['G_CLIENT_SECRET'] %>
+
+default_url: &default_url
+  url:
+    callback: <%= ENV['G_REDIRECT_URI'] %>
+    auth: https://oauth2.googleapis.com/token
+    refresh: https://www.googleapis.com/oauth2/v4/token
+    info: https://www.googleapis.com/oauth2/v1/userinfo
+    login: https://accounts.google.com/o/oauth2/auth
+
+    params_login:
+      client_id: <%= ENV['G_CLIENT_ID'] %>
+      response_type: code
+      scope: email profile openid
+
+production:
+  <<: *default
+  <<: *default_url
+
+development:
+  <<: *default
+  <<: *default_url
+
+test_with_sinatra:
+  <<: *default
+  url:
+    callback: /callback
+    auth: http://127.0.0.1:4567/google/token
+    refresh: http://127.0.0.1:4567/refresh
+    info: http://127.0.0.1:4567/oauth2/v1/userinfo
+    login: http://127.0.0.1:4567/o/oauth2/auth
+
+    params_login:
+      client_id: abc123
+      response_type: code
+      scope: email profile openid
