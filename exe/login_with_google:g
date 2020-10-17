@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+template    = File.expand_path('../config/templates/google_login.yml', __dir__)
+config_file = 'config/google_login.yml'
+
+FileUtils.mkdir_p(File.dirname(config_file))
+FileUtils.cp(template, "#{Dir.pwd}/#{config_file}")
+puts "File generated: \e[32m#{config_file}\e[0m"
+exit
