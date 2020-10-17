@@ -1,8 +1,5 @@
-# LoginWithGoogle
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/login_with_google`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+# login\_with\_google
 
 ## Installation
 
@@ -19,22 +16,57 @@ And then execute:
 Or install it yourself as:
 
     $ gem install login_with_google
+    
+    
+Generate config file
+
+	$ bundle exec login_with_google:g
+
+## Creating your credentials
+
+[Full steps to create your credentials](creating_credentials.md)
+
+#### Add credentials and redirect_uri to env
+
+```
+export G_CLIENT_ID='client_id'
+export G_CLIENT_SECRET='client_secret'
+export G_REDIRECT_URI='http://localhost:3000/callback'
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+#### Url to login
 
-## Development
+```ruby
+LoginWithGoogle::Api.url_in
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+#### Url to login with helper
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/login_with_google. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/login_with_google/blob/master/CODE_OF_CONDUCT.md).
+```ruby
+g_url_in
+```
 
 
-## Code of Conduct
+#### Process callback
 
-Everyone interacting in the LoginWithGoogle project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/login_with_google/blob/master/CODE_OF_CONDUCT.md).
+Get auth return keys `access_token expires_in scope token_type id_token`
+
+```ruby
+@auth = LoginWithGoogle::Api.auth code: params[:code]
+```
+
+Get user info return keys `id email verified_email name given_name family_name picture locale`
+
+```ruby
+@info = LoginWithGoogle::Api.info @auth
+```
+
+#### Refresh a token
+
+Pass a `access_token` from `@auth` and receive a keys `access_token expires_in scope token_type id_token`
+
+```ruby
+@refresh = LoginWithGoogle::Api.refresh(token: @auth['access_token'])
+```
